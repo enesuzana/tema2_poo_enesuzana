@@ -8,7 +8,7 @@ using namespace std;
 // operatorii -> fc membre ale claselol, ma putin >> << )
 // MOSTENIRI/ FC VIRTUALE/ CLASE ABSTRACTE/INTERFETE
 // templates +1p
-
+//d
 class Nod{
     char info;
     Nod *next;
@@ -64,7 +64,7 @@ public:
     Nod_prioritate(const Nod_prioritate &n):Nod_dublu(n){prio = n.prio;}
     ~Nod_prioritate(){}
     int getPrio(){ return prio; }
-    void setPrio(int pr){prio = pr; }
+    void setPrio(int pr){prio = pr; }//f
 
 };
 
