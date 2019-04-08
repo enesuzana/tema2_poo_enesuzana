@@ -1,4 +1,5 @@
 # depslib dependency file v1.0
-1554761261 source:c:\users\suzi\desktop\oop\poo tema 2\main.cpp
+1554766302 source:c:\users\suzi\desktop\oop\poo tema 2\main.cpp
 	<iostream>
+	<fstream>
 
