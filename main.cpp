@@ -3,13 +3,7 @@
 using namespace std;
 ifstream fin("test.in");
 ofstream fout("test.out");
-//derived classes need parametrized constructors , destructors
-// constr de init, parametr, de copiere, destructor,
-// >> << = overloaded
-// operatorii -> fc membre ale claselol, ma putin >> << )
-// MOSTENIRI/ FC VIRTUALE/ CLASE ABSTRACTE/INTERFETE
-// templates +1p
-//d
+
 class Nod{
     char info;
     Nod *next;
