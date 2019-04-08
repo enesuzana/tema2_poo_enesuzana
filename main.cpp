@@ -80,16 +80,49 @@ public:
 
 class Nod_prioritate:public Nod_dublu{
     int prio;
+    int info;
+    Nod_prioritate *ante;
+    Nod_prioritate *next;
 public:
-    Nod_prioritate(){ prio = 0; }
-    Nod_prioritate(char i, Nod_prioritate *anterior, Nod_prioritate *nextn, int priority):Nod_dublu(i, anterior, nextn){
-        prio = priority;
+    //constr simplu
+    Nod_prioritate(){ prio = 0; ante = next = NULL; }
+    //parametrizat
+    Nod_prioritate(char i, Nod_prioritate *a, Nod_prioritate *n, int pr):Nod_dublu(i, a, n){
+        prio = pr;
+        ante = a;
+        next = n;
+        info = i;
     }
-    Nod_prioritate(const Nod_prioritate &n):Nod_dublu(n){prio = n.prio;}
+    //de copiere
+    Nod_prioritate(const Nod_prioritate &n):Nod_dublu(n){
+        ante = n.ante;
+        next = n.next;
+        info = n.info;
+        prio = n.prio;
+    }
+    //destructor
     ~Nod_prioritate(){}
+    //getteri, setteri
     int getPrio(){ return prio; }
-    void setPrio(int pr){prio = pr; }//f
+    void setPrio(int pr){prio = pr; }
 
+    void setInfo(int inf){ info = inf;}
+    virtual int getInfo(){return info;}
+
+    Nod_prioritate *getNext(){ return next;}
+    Nod_prioritate *getAnte(){ return ante; }
+
+    void setAnte(Nod_prioritate *nod){ ante = nod; }
+    void setNext(Nod_prioritate *nod){ next = nod; }
+    //operator
+    Nod_prioritate* operator=(const Nod_prioritate &nod){
+        ante = nod.ante;
+        info = nod.info;
+        next = nod.next;
+        prio = nod.prio;
+        return this;
+    }
+    friend class CoadaDePrioritati;
 };
 
 //uses Nod elements
@@ -459,20 +492,8 @@ public:
     int getPrioNod(){ return nod->getPrio();}
 };
 
-int main(){/*
-    Nod *t = new Nod(1,NULL);
-    Nod_dublu *p3 = new Nod_dublu(5, NULL, NULL);
-    Nod_dublu *p1= new Nod_dublu(1, NULL, p3);
-    Nod_dublu *p = new Nod_dublu(2, p1 , NULL);*/
-    // inh + constr param ok
-    /*
-    Nod_prioritate *prio1 = new Nod_prioritate(12, NULL, NULL, 1);
-    Nod_prioritate *prio2 = new Nod_prioritate(9, prio1, NULL, 4);
-    Nod_prioritate *prio3 = new Nod_prioritate(20, prio2, prio1, 6);
-    //cout << prio3->getNext()->getInfo();
-    delete prio3;
-    cout << prio3;
-    //priorit nod ok*/
+int main(){
+
 
     cout<< "exemplu de push in lista, << , >>";
     ListaSimpluInlantuita l1;
@@ -509,10 +530,20 @@ int main(){/*
     cout<<"dupa stergere 10:"<<ld;
 
     //exemplu fisier
+    /*
     ListaSimpluInlantuita fisierEx;
     fin >> fisierEx >> fisierEx >> fisierEx;
-    fout << fisierEx;
+    fout << fisierEx;*/
 
+    Nod_prioritate *prio1 = new Nod_prioritate(10,NULL,NULL, 1);
+    Nod_prioritate *prio2 = new Nod_prioritate(9, prio1, NULL, 4);
+    Nod_prioritate *prio3 = new Nod_prioritate(20, prio2, prio1, 6);
 
+    Nod_prioritate *prio4(prio3);
+    cout <<"Prioriatea dupa constructor de copiere "<< prio4->getPrio() << endl;
+
+    Nod_prioritate *prio5 = prio1;
+    cout << "prio5 op = prio1 " << prio5->getInfo();
+    //priorit nod ok*/
     return 0;
 }
