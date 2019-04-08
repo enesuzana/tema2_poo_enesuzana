@@ -13,34 +13,27 @@ class Nod{
     char info;
     Nod *next;
 public:
-    //constructor simplu
     Nod(){
         info = 0;
         next = NULL;
     }
-    //param
     Nod(char inf, Nod *n){
         info = inf;
         next = n;
     }
-    //de copiere
     Nod(const Nod &n){ info = n.info;
                        next = n.next;}
-    //destructor
     virtual ~Nod(){
-        if(next!=NULL){ delete next;}
     }
-    //getteri, setteri
-    virtual int getInfo(){
+
+    int getInfo(){
         return (int)info;
     }
-    virtual void setInfo(char val){ info = val; }
-    virtual Nod *getNext(){ return next;}
-    virtual void setNext(Nod *nod){ next = nod; }
-
+    void setInfo(char val){ info = val; }
+    Nod *getNext(){ return next;}
+    void setNext(Nod *nod){ next = nod; }
     friend class ListaSimpluInlantuita;
-    //operator =
-    virtual Nod* operator=(Nod *p2){
+    Nod* operator=(Nod *p2){
         info = p2->getInfo();
         next = p2->getNext();
         return this;
@@ -295,14 +288,14 @@ public:
     Nod_dublu* getAnteNod(){ return nod->getAnte(); }
 
     virtual void push(int val, int poz);
-    //zzvirtual void del(int val);
+    //virtual void del(int val);
     //operatori:
     //virtual ListaDubluInlantuita operator=(ListaDubluInlantuita l);
     //virtual ListaDubluInlantuita operator+(ListaDubluInlantuita l2);
     //friend ostream& operator<<(ostream& out,const ListaDubluInlantuita &lista);
     //friend istream& operator>>(istream& in, ListaDubluInlantuita &lista);
 };
-/*
+
 void ListaDubluInlantuita::push(int val, int poz){
     if(poz > getCounter() || poz < 0 ){ cout << "Position error";}
     else{
@@ -340,7 +333,7 @@ void ListaDubluInlantuita::push(int val, int poz){
         }
         setCounter(getCounter()+1);
     }
-}*/
+}
 
 //uses Nod_prioritate
 class CoadaDePrioritati:ListaDubluInlantuita{
@@ -358,19 +351,11 @@ public:
     int getPrioNod(){ return nod->getPrio();}
 };
 
-int main(){
-
-    Nod_dublu *t= new Nod_dublu(0, NULL, NULL);
-    Nod_dublu *t2 = new Nod_dublu(11, t, NULL);
-    //copiere
-    Nod_dublu *t3(t2);
-    cout<<t3->getInfo();
-    t3 = t;
-    //operator =
-    cout<<t3->getInfo();
-
-
-
+int main(){/*
+    Nod *t = new Nod(1,NULL);
+    Nod_dublu *p3 = new Nod_dublu(5, NULL, NULL);
+    Nod_dublu *p1= new Nod_dublu(1, NULL, p3);
+    Nod_dublu *p = new Nod_dublu(2, p1 , NULL);*/
     // inh + constr param ok
     /*
     Nod_prioritate *prio1 = new Nod_prioritate(12, NULL, NULL, 1);
@@ -402,9 +387,9 @@ int main(){
     ListaSimpluInlantuita l3(l1);
     cout << l3;
     //
-    //ListaDubluInlantuita ldb;
-    //ldb.push(1,0);
-    //ldb.push(10,1);
-    //ldb.push(11,2);
+    ListaDubluInlantuita ldb;
+    ldb.push(1,0);
+    ldb.push(10,1);
+    ldb.push(11,2);
     return 0;
 }
