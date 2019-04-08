@@ -335,6 +335,8 @@ public:
     friend istream& operator>>(istream& in, ListaDubluInlantuita &lista);
 };
 
+
+
 ListaDubluInlantuita::ListaDubluInlantuita(const ListaDubluInlantuita &l){
     head = new Nod_dublu(1, NULL, NULL);
     tail = head;
@@ -421,9 +423,6 @@ ostream& operator<<(ostream& out, ListaDubluInlantuita &lista){
         out << p->getInfo() << " ";
         p = p->getAnte();
     }
-
-
-
     out << endl;
     return out;
 }
@@ -480,17 +479,137 @@ void ListaDubluInlantuita::push(int val, int poz){
 class CoadaDePrioritati:ListaDubluInlantuita{
     Nod_prioritate *head;
     Nod_prioritate *tail;
-    Nod_prioritate *nod;
-    int prio;
+    int n;
 public:
-    CoadaDePrioritati(){prio = 0;}
-    CoadaDePrioritati(Nod_prioritate *head, Nod_prioritate *tail, int i, int priority):
-        ListaDubluInlantuita(head, tail, i){prio = priority;
+    CoadaDePrioritati(){ head = new Nod_prioritate(-1, NULL,NULL, 0);
+                         tail = head;
+                         n = 0;}
+    CoadaDePrioritati(Nod_prioritate *h, Nod_prioritate *t, int i):ListaDubluInlantuita(h,t,i){
+        head = h;
+        tail = t;
+        n = i;
     }
-    //~CoadaDePrioritati();
-    void setPrioNod(int pr){ nod->setPrio(pr);}
-    int getPrioNod(){ return nod->getPrio();}
+    CoadaDePrioritati(const CoadaDePrioritati &l);
+    ~CoadaDePrioritati(){}
+    Nod_prioritate* getHead(){ return head;}
+    void setHead(int val){ head->setInfo((int)val);}
+
+    Nod_prioritate* getTail(){ return tail;}
+    void setTail(char val){ tail->setInfo(val);}
+
+    void setCounter(int c){ n = c;}
+    int getCounter(){ return n;}
+
+    virtual void push(int val, int poz);
+    virtual void pop();
+    //operatori:
+    virtual CoadaDePrioritati operator=(CoadaDePrioritati l);
+    virtual CoadaDePrioritati operator+(CoadaDePrioritati l2);
+    friend ostream& operator<<(ostream& out,const CoadaDePrioritati &lista);
 };
+
+void CoadaDePrioritati::push(int val, int prio){
+    if(prio<0 ){ cout << "Prio error";}
+    else{
+        //decl new nod
+        if( head->getInfo() == -1 ){ cout<<"o creez"<<endl;
+            Nod_prioritate *pushed = new Nod_prioritate(val,NULL,NULL,prio);
+            head = pushed;
+            tail = pushed;
+        }
+        else{
+            //prio e mai mare ca prio de primul elem, inserez la inceput
+            if( prio < head->getPrio()){
+                    Nod_prioritate *pushed = new Nod_prioritate(val, NULL, head, prio);
+                    cout<<"sunt pe 0"<<endl;
+                    head = pushed;
+            }
+            //e mai mare ca a ultimului
+            else if(prio >= tail->getPrio()){
+                    Nod_prioritate *pushed = new Nod_prioritate(val, tail, NULL, prio);
+                    cout<<"sunt pe n"<<endl;
+                    tail->setNext(pushed);
+                    tail = pushed;
+                }
+                else{cout<<"sunt pe undeva";
+                    Nod_prioritate *pushed = new Nod_prioritate(val, NULL, NULL, prio);
+                    Nod_prioritate *q = head->getNext();
+                    while(q->getPrio() > prio ){
+                        q = q->getNext();
+                    }
+                    q->getAnte()->setNext(pushed);
+                    pushed->setNext(q->getAnte());
+                    pushed->setAnte(q->getAnte()->getNext());
+                    q->setAnte(pushed->getNext());
+
+                }
+            }
+        }
+    setCounter(getCounter()+1);
+}
+
+CoadaDePrioritati::CoadaDePrioritati(const CoadaDePrioritati &c){
+    head = new Nod_prioritate(1, NULL, NULL,0);
+    tail = head;
+    int k = 0;
+    setCounter(k);
+    Nod *p = c.head;
+    int i;
+    for(i = 0; i < c.n; i++){
+        push(p->getInfo(), i);
+        p = p->getNext();
+    }
+}
+
+
+ostream& operator<<(ostream& out, CoadaDePrioritati &coada){
+    Nod_dublu *p = coada.getHead();
+    int c = 0;
+
+    while(c < coada.getCounter()-1 ){
+        out << p->getInfo() << " ";
+        p = p->getNext();
+        c++;
+    }
+    out << endl;
+    return out;
+}
+//removes element with least priority
+void CoadaDePrioritati::pop(){
+    Nod_prioritate *p = head;
+    head = head->getNext();
+    delete p;
+    if( head == NULL ){
+        tail = NULL;
+    }
+}
+
+CoadaDePrioritati CoadaDePrioritati::operator=(CoadaDePrioritati c){
+    CoadaDePrioritati c3(c);
+    return c3;
+}
+
+CoadaDePrioritati CoadaDePrioritati::operator+(CoadaDePrioritati c2){
+    CoadaDePrioritati c3;
+    int k = 0;
+    c3.setCounter(k);
+    Nod_prioritate *p = getHead();
+    int i;
+    for(i = 0; i < getCounter(); i++){
+        c3.push(p->getInfo(), i);
+        p = p->getNext();
+    }
+
+    p = c2.getHead();
+
+    for(int k = 0; k < c2.getCounter(); k++){
+        c3.push(p->getInfo(), i);
+        i++;
+        p = p->getNext();
+    }
+
+    return c3;
+}
 
 int main(){
 
@@ -543,7 +662,72 @@ int main(){
     cout <<"Prioriatea dupa constructor de copiere "<< prio4->getPrio() << endl;
 
     Nod_prioritate *prio5 = prio1;
-    cout << "prio5 op = prio1 " << prio5->getInfo();
+    cout << "prio5 op = prio1 " << prio5->getInfo() << endl;
     //priorit nod ok*/
+
+    CoadaDePrioritati c1;
+    c1.push(1,0);
+    c1.push(3,1);
+    c1.push(10,10);
+    c1.push(2,1);
+
+    //Citire, mem, afisare
+
+    int n;
+    int x;
+    cout << endl <<"Cate liste simple? ";
+    cin >> n;
+    ListaSimpluInlantuita lista[n];
+
+    //citirea listelor
+    for(int i = 0 ; i < n; i++){
+        cout << "Cate elemente pentru lista " << i <<" ?" << endl;
+        cin >> x;
+        for( int k = 0; k < x ; k++ ){
+            cin >> lista[i];
+        }
+    }
+    //afisare
+    for(int i = 0 ; i < n; i++){
+        cout<<lista[i];
+    }
+
+    int n2;
+    int x2;
+    cout << endl <<"Cate liste duble? ";
+    cin >> n2;
+    ListaDubluInlantuita lista2[n];
+
+    //citirea listelor
+    for(int i = 0 ; i < n2; i++){
+        cout << "Cate elemente pentru lista " << i <<" ?" << endl;
+        cin >> x2;
+        for( int k = 0; k < x2 ; k++ ){
+            cin >> lista2[i];
+        }
+    }
+    //afisare
+    for(int i = 0 ; i < n2; i++){
+        cout<<lista2[i];
+    }
+
+    int n3;
+    int x3;
+    cout << endl <<"Cate cozi? ";
+    cin >> n3;
+    ListaDubluInlantuita coada3[n];
+
+    //citirea listelor
+    for(int i = 0 ; i < n3; i++){
+        cout << "Cate elemente pentru coada " << i <<" ?" << endl;
+        cin >> x3;
+        for( int k = 0; k < x3 ; k++ ){
+            cin >> coada3[i];
+        }
+    }
+    //afisare
+    for(int i = 0 ; i < n3; i++){
+        cout<<coada3[i];
+    }
     return 0;
 }
