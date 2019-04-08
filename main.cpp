@@ -50,6 +50,7 @@ public:
     Nod_dublu(const Nod_dublu &n): Nod(n){ ante = n.ante;}
     virtual ~Nod_dublu(){
     }
+    Nod_dublu *getNext(){ return getNext();}
     Nod_dublu *getAnte(){ return ante; }
     void setAnte(Nod_dublu *nod){ ante = nod; }
 };
@@ -85,7 +86,8 @@ public:
         n = nr;
     }
     ListaSimpluInlantuita(const ListaSimpluInlantuita &l);
-    //~ListaSimpluInlantuita();
+    ~ListaSimpluInlantuita();
+
     Nod* getHead(){ return head;}
     void setHead(int val){ head->setInfo((int)val);}
     Nod* getTail(){ return tail;}
@@ -104,10 +106,17 @@ public:
 
     virtual void push(int val, int poz);
     virtual void del(int val);
+    //operatori:
+    virtual ListaSimpluInlantuita operator=(ListaSimpluInlantuita l);
     virtual ListaSimpluInlantuita operator+(ListaSimpluInlantuita l2);
     friend ostream& operator<<(ostream& out,const ListaSimpluInlantuita &lista);
     friend istream& operator>>(istream& in, ListaSimpluInlantuita &lista);
 };
+
+ListaSimpluInlantuita ListaSimpluInlantuita::operator=(ListaSimpluInlantuita l){
+    ListaSimpluInlantuita l3(l);
+    return l3;
+}
 
 ListaSimpluInlantuita::ListaSimpluInlantuita(const ListaSimpluInlantuita &l){
     head = new Nod(-1, NULL);
@@ -122,8 +131,8 @@ ListaSimpluInlantuita::ListaSimpluInlantuita(const ListaSimpluInlantuita &l){
         p = p->getNext();
     }
 }
-/*
-ListaSimpluInlantuita::~ListaSimpluInlantuita(){
+
+ListaSimpluInlantuita::~ListaSimpluInlantuita(void){
     Nod *p = head;
     Nod *q;
     while( p!= NULL){
@@ -131,7 +140,7 @@ ListaSimpluInlantuita::~ListaSimpluInlantuita(){
         p = p->next;
         delete q;
     }
-}*/
+}
 
 void ListaSimpluInlantuita::push(int val, int poz){
     if(poz > n || poz < 0 ){ cout << "Position error";}
@@ -246,9 +255,58 @@ class ListaDubluInlantuita:ListaSimpluInlantuita{
 public:
     ListaDubluInlantuita(){}
     ListaDubluInlantuita(Nod_dublu *head, Nod_dublu *tail, int i):ListaSimpluInlantuita(head, tail, i){}
+    //~ListaDubluInlantuita();
     void setAnteNod(Nod_dublu *prev){ nod->setAnte(prev); }
     Nod_dublu* getAnteNod(){ return nod->getAnte(); }
+
+    virtual void push(int val, int poz);
+    //virtual void del(int val);
+    //operatori:
+    //virtual ListaDubluInlantuita operator=(ListaDubluInlantuita l);
+    //virtual ListaDubluInlantuita operator+(ListaDubluInlantuita l2);
+    //friend ostream& operator<<(ostream& out,const ListaDubluInlantuita &lista);
+    //friend istream& operator>>(istream& in, ListaDubluInlantuita &lista);
 };
+
+void ListaDubluInlantuita::push(int val, int poz){
+    if(poz > getCounter() || poz < 0 ){ cout << "Position error";}
+    else{
+        //decl new nod
+        if( head->getInfo() == -1 && poz == 0){cout<<"o creez"<<endl;
+            Nod_dublu *pushed = new Nod_dublu(val, NULL, NULL);
+            head = pushed;
+            tail = pushed;
+        }
+        else{
+            if( poz == 0 ){ //prima poz
+                Nod_dublu *pushed = new Nod_dublu(val, NULL, head);
+                cout<<"sunt pe 0"<<endl;
+                head = pushed;
+            }
+            else{
+                if( poz == getCounter() ){
+                    Nod_dublu *pushed = new Nod_dublu(val, tail, NULL);
+                    cout<<"sunt pe n"<<endl;
+                    tail->setNext(pushed);
+                    tail = pushed;
+                }
+                else{
+                    cout<<"sunt in int"<<endl;
+                    Nod_dublu *p = head;
+                    Nod_dublu *pushed = new Nod_dublu(val, NULL, NULL);
+                    for( int i = 0; i < poz-1; i++){
+                        p = p->getNext();
+                    }
+                    pushed->setNext(p->getNext());
+                    p->setNext(pushed);
+                    pushed->setAnte(p);
+                }
+            }
+        }
+        setCounter(getCounter()+1);
+    }
+}
+
 //uses Nod_prioritate
 class CoadaDePrioritati:ListaDubluInlantuita{
     Nod_prioritate *head;
@@ -260,6 +318,7 @@ public:
     CoadaDePrioritati(Nod_prioritate *head, Nod_prioritate *tail, int i, int priority):
         ListaDubluInlantuita(head, tail, i){prio = priority;
     }
+    //~CoadaDePrioritati();
     void setPrioNod(int pr){ nod->setPrio(pr);}
     int getPrioNod(){ return nod->getPrio();}
 };
@@ -300,6 +359,9 @@ int main(){/*
     ListaSimpluInlantuita l3(l1);
     cout << l3;
     //
-
+    ListaDubluInlantuita ldb;
+    ldb.push(1,0);
+    ldb.push(10,1);
+    ldb.push(11,2);
     return 0;
 }
