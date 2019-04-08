@@ -13,27 +13,34 @@ class Nod{
     char info;
     Nod *next;
 public:
+    //constructor simplu
     Nod(){
         info = 0;
         next = NULL;
     }
+    //param
     Nod(char inf, Nod *n){
         info = inf;
         next = n;
     }
+    //de copiere
     Nod(const Nod &n){ info = n.info;
                        next = n.next;}
+    //destructor
     virtual ~Nod(){
+        if(next!=NULL){ delete next;}
     }
-
-    int getInfo(){
+    //getteri, setteri
+    virtual int getInfo(){
         return (int)info;
     }
-    void setInfo(char val){ info = val; }
-    Nod *getNext(){ return next;}
-    void setNext(Nod *nod){ next = nod; }
+    virtual void setInfo(char val){ info = val; }
+    virtual Nod *getNext(){ return next;}
+    virtual void setNext(Nod *nod){ next = nod; }
+
     friend class ListaSimpluInlantuita;
-    Nod* operator=(Nod *p2){
+    //operator =
+    virtual Nod* operator=(Nod *p2){
         info = p2->getInfo();
         next = p2->getNext();
         return this;
@@ -42,17 +49,45 @@ public:
 
 class Nod_dublu:public Nod{
     Nod_dublu *ante;
+    int info;
+    Nod_dublu *next;
 public:
-    Nod_dublu(){ante = NULL;}
+    //constr simplu
+    Nod_dublu(){ante = NULL; info = -1; next = NULL;}
+    //parametrizat
     Nod_dublu(char i, Nod_dublu *anterior,  Nod_dublu *nextn):Nod(i, nextn){
         ante = anterior;
+        info = i;
+        next = nextn;
     }
-    Nod_dublu(const Nod_dublu &n): Nod(n){ ante = n.ante;}
+    //de copiere
+    Nod_dublu(const Nod_dublu &n): Nod(n){ ante = n.ante;
+        next = n.next;
+        info = n.info;}
+    //destructor
     virtual ~Nod_dublu(){
+        if(ante != NULL){
+            delete ante;
+        }
+        if(next != NULL){
+            delete next;
+        }
     }
-    Nod_dublu *getNext(){ return getNext();}
+    //getteri, setteri
+    void setInfo(int inf){ info = inf;}
+    virtual int getInfo(){return info;}
+    Nod_dublu *getNext(){ return next;}
     Nod_dublu *getAnte(){ return ante; }
     void setAnte(Nod_dublu *nod){ ante = nod; }
+    void setNext(Nod_dublu *nod){ next = nod; }
+    //= e ok
+    Nod* operator=(const Nod_dublu &nod){
+        ante = nod.ante;
+        info = nod.info;
+        next = nod.next;
+        return this;
+    }
+    friend class ListaDubluInlantuita;
 };
 
 class Nod_prioritate:public Nod_dublu{
@@ -260,14 +295,14 @@ public:
     Nod_dublu* getAnteNod(){ return nod->getAnte(); }
 
     virtual void push(int val, int poz);
-    //virtual void del(int val);
+    //zzvirtual void del(int val);
     //operatori:
     //virtual ListaDubluInlantuita operator=(ListaDubluInlantuita l);
     //virtual ListaDubluInlantuita operator+(ListaDubluInlantuita l2);
     //friend ostream& operator<<(ostream& out,const ListaDubluInlantuita &lista);
     //friend istream& operator>>(istream& in, ListaDubluInlantuita &lista);
 };
-
+/*
 void ListaDubluInlantuita::push(int val, int poz){
     if(poz > getCounter() || poz < 0 ){ cout << "Position error";}
     else{
@@ -305,7 +340,7 @@ void ListaDubluInlantuita::push(int val, int poz){
         }
         setCounter(getCounter()+1);
     }
-}
+}*/
 
 //uses Nod_prioritate
 class CoadaDePrioritati:ListaDubluInlantuita{
@@ -323,11 +358,19 @@ public:
     int getPrioNod(){ return nod->getPrio();}
 };
 
-int main(){/*
-    Nod *t = new Nod(1,NULL);
-    Nod_dublu *p3 = new Nod_dublu(5, NULL, NULL);
-    Nod_dublu *p1= new Nod_dublu(1, NULL, p3);
-    Nod_dublu *p = new Nod_dublu(2, p1 , NULL);*/
+int main(){
+
+    Nod_dublu *t= new Nod_dublu(0, NULL, NULL);
+    Nod_dublu *t2 = new Nod_dublu(11, t, NULL);
+    //copiere
+    Nod_dublu *t3(t2);
+    cout<<t3->getInfo();
+    t3 = t;
+    //operator =
+    cout<<t3->getInfo();
+
+
+
     // inh + constr param ok
     /*
     Nod_prioritate *prio1 = new Nod_prioritate(12, NULL, NULL, 1);
@@ -359,9 +402,9 @@ int main(){/*
     ListaSimpluInlantuita l3(l1);
     cout << l3;
     //
-    ListaDubluInlantuita ldb;
-    ldb.push(1,0);
-    ldb.push(10,1);
-    ldb.push(11,2);
+    //ListaDubluInlantuita ldb;
+    //ldb.push(1,0);
+    //ldb.push(10,1);
+    //ldb.push(11,2);
     return 0;
 }
