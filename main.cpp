@@ -153,10 +153,29 @@ public:
     //operatori:
     virtual ListaSimpluInlantuita operator=(ListaSimpluInlantuita l);
     virtual ListaSimpluInlantuita operator+(ListaSimpluInlantuita l2);
+    bool operator==(ListaSimpluInlantuita l);
     friend ostream& operator<<(ostream& out,const ListaSimpluInlantuita &lista);
     friend istream& operator>>(istream& in, ListaSimpluInlantuita &lista);
 
 };
+
+bool ListaSimpluInlantuita::operator==(ListaSimpluInlantuita l){
+    ListaSimpluInlantuita temp(l); //initiem o lista
+    Nod *p = this->head;
+    Nod *comp = temp.head;
+    if(this->getCounter() != temp.getCounter()){
+        return false;
+    }
+    for(int i = 0; i < this->getCounter(); i++){
+        if( p->getInfo() != comp->getInfo()){
+            return false;
+        }
+        p = p->getNext();
+        comp = comp->getNext();
+    }
+    return true;
+}
+
 
 ListaSimpluInlantuita ListaSimpluInlantuita::operator=(ListaSimpluInlantuita l){
     ListaSimpluInlantuita l3(l);
@@ -607,7 +626,7 @@ CoadaDePrioritati CoadaDePrioritati::operator+(CoadaDePrioritati c2){
 
 int main(){
 
-
+/*
     cout<< "exemplu de push in lista, << , >>";
     ListaSimpluInlantuita l1;
     l1.push(1,0);
@@ -647,7 +666,7 @@ int main(){
     ListaSimpluInlantuita fisierEx;
     fin >> fisierEx >> fisierEx >> fisierEx;
     fout << fisierEx;*/
-
+/*
     Nod_prioritate *prio1 = new Nod_prioritate(10,NULL,NULL, 1);
     Nod_prioritate *prio2 = new Nod_prioritate(9, prio1, NULL, 4);
     Nod_prioritate *prio3 = new Nod_prioritate(20, prio2, prio1, 6);
@@ -658,12 +677,13 @@ int main(){
     Nod_prioritate *prio5 = prio1;
     cout << "prio5 op = prio1 " << prio5->getInfo() << endl;
     //priorit nod ok*/
-
+/*
     CoadaDePrioritati c1;
     c1.push(1,0);
     c1.push(3,1);
     c1.push(10,10);
     c1.push(2,1);
+    */
 
     //Citire, mem, afisare
 
@@ -686,6 +706,15 @@ int main(){
         cout<<lista[i];
     }
 
+    if( lista[0] == lista[1]){
+        cout << endl << "egale!";
+    }
+    else{
+        cout << endl << "nu sunt egale!";
+    }
+
+    /*
+
     int n2;
     int x2;
     cout << endl <<"Cate liste duble? ";
@@ -700,9 +729,10 @@ int main(){
             cin >> lista2[i];
         }
     }
+    /*
     //afisare
     for(int i = 0 ; i < n2; i++){
-        cout<<lista2[i];
+        cout << lista2[i];
     }
 
     int n3;
@@ -721,7 +751,8 @@ int main(){
     }
     //afisare
     for(int i = 0 ; i < n3; i++){
-        cout<<coada3[i];
+        cout << coada3[i];
     }
+    */
     return 0;
 }
